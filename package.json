@@ -420,7 +420,7 @@
         "@vscode/webview-ui-toolkit": "^1.2.2",
         "mocha": "^10.2.0",
         "ts-loader": "^9.5.1",
-        "typescript": "^5.2.2",
+        "typescript": "^5.8.2",
         "webpack": "^5.88.2",
         "webpack-cli": "^5.1.4"
     },
