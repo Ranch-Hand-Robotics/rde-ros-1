@@ -8,7 +8,7 @@
     "author": {
         "name": "Ranch Hand Robotics, LLC"
     },
-    "displayName": "Robot Development Environment for ROS 1",
+    "displayName": "Robot Developer Extensions for ROS 1",
     "description": "Develop Robot Operating System (ROS) Noetic with Visual Studio Code.",
     "icon": "media/icon.png",
     "categories": [
