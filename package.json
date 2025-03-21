@@ -385,7 +385,7 @@
     "dependencies": {
         "@vscode/debugadapter": "^1.59.0",
         "@vscode/webview-ui-toolkit": "^1.2.2",
-        "assert": "^2.0.0",
+        "assert": "^2.1.0",
         "buffer": "^6.0.3",
         "console-browserify": "^1.2.0",
         "constants-browserify": "^1.0.0",
