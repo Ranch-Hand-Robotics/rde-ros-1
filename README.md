@@ -49,7 +49,7 @@ For more detailed instructions and options, refer to our [debugging documentatio
 ## Support
 If you encounter any issues with this extension, the following resources are provided:
 ### Github Issues
-Bugs and feature requests are handled through [Github Issues in the Repository](https://github.com/Ranch-Hand-Robotics/rde-ros-2/issues). 
+Bugs and feature requests are handled through [Github Issues in the Repository](https://github.com/Ranch-Hand-Robotics/rde-ros-1/issues). 
 If you find that you are hitting the same issue as someone else, please give a :+1: or comment on an existing issue.
 Please provide as much details as possible, including an isolated reproduction of the issue or a pointer to an online repository.
 
