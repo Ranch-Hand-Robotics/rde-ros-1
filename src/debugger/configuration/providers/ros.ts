@@ -10,14 +10,30 @@ export class RosDebugConfigurationProvider implements vscode.DebugConfigurationP
     public async provideDebugConfigurations(
         folder: vscode.WorkspaceFolder | undefined,
         token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration[]> {
-        const type = await vscode.window.showQuickPick(
-            ["ROS: Launch", "ROS: Attach"], { placeHolder: "Choose a request type" });
-        if (!type) {
+
+        if (token?.isCancellationRequested) {
+            return [];
+        }
+
+        // When VS Code asks for initial configurations (user selected "ROS 2" from dropdown),
+        // trigger the interactive flow to find actual packages and launch files
+        return this.provideDebugConfigurationsInteractive(folder, token);
+    }
+
+    /**
+     * Interactive configuration method for when user needs more detailed setup
+     */
+    public async provideDebugConfigurationsInteractive(
+        folder: vscode.WorkspaceFolder | undefined,
+        token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration[]> {              const type = await vscode.window.showQuickPick(
+            ["ROS 1: Launch", "ROS 1: Attach"], { placeHolder: "Choose a request type" });
+        
+            if (!type) {
             return [];
         }
 
         switch (type) {
-            case "ROS: Launch": {
+            case "ROS 1: Launch": {
                 const packageName = await vscode.window.showQuickPick(rosApi.getPackageNames(), {
                     placeHolder: "Choose a package",
                 });
@@ -39,11 +55,10 @@ export class RosDebugConfigurationProvider implements vscode.DebugConfigurationP
                     target: `${launchFilePath}`,
                     launch: ["rviz", "gz", "gzclient", "gzserver"],
                     type: "ros",
-                }];
-            }
-            case "ROS: Attach": {
+                }];            }
+            case "ROS 1: Attach": {
                 return [{
-                    name: "ROS: Attach",
+                    name: "ROS 1: Attach",
                     request: "attach",
                     type: "ros",
                 }];

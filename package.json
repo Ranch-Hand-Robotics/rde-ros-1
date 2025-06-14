@@ -14,11 +14,10 @@
     "categories": [
         "Debuggers",
         "Other"
-    ],
-    "capabilities": {
+    ],    "capabilities": {
         "untrustedWorkspaces": {
             "supported": false,
-            "description": "The Visual Studio Code ROS Extension calls ROS on behalf of packages in the workspace. This can execute code from within the workspace. For this reason, this extension requires a fully trusted workspace."
+            "description": "The Visual Studio Code ROS 1 Extension calls ROS 1 on behalf of packages in the workspace. This can execute code from within the workspace. For this reason, this extension requires a fully trusted workspace."
         }
     },
     "keywords": [
@@ -43,81 +42,78 @@
         "onCommand",
         "workspaceContains:**/package.xml",
         "onWebviewPanel:ros1Status",
-        "onWebviewPanel:ros2Status",
         "onWebviewPanel:urdfPreview",
         "onDebug",
         "onDebugResolve:ros",
         "onDebugDynamicConfigurations:ros"
     ],
-    "contributes": {
-        "commands": [
+    "contributes": {        "commands": [
             {
                 "command": "ros.createCatkinPackage",
                 "title": "Create Catkin Package",
-                "category": "ROS"
+                "category": "ROS 1"
             },
             {
                 "command": "ros.createTerminal",
                 "title": "Create Terminal",
-                "category": "ROS"
+                "category": "ROS 1"
             },
             {
                 "command": "ros.rosrun",
-                "title": "Run a ROS executable (rosrun)",
-                "category": "ROS"
+                "title": "Run a ROS 1 executable (rosrun)",
+                "category": "ROS 1"
             },
             {
                 "command": "ros.roslaunch",
-                "title": "Run a ROS launch file (roslaunch)",
-                "category": "ROS"
+                "title": "Run a ROS 1 launch file (roslaunch)",
+                "category": "ROS 1"
             },
             {
                 "command": "ros.rostest",
-                "title": "Run a ROS test file (rostest)",
-                "category": "ROS"
+                "title": "Run a ROS 1 test file (rostest)",
+                "category": "ROS 1"
             },
             {
                 "command": "ros.showCoreStatus",
                 "title": "Show Status",
-                "category": "ROS"
+                "category": "ROS 1"
             },
             {
                 "command": "ros.startCore",
                 "title": "Start",
-                "category": "ROS"
+                "category": "ROS 1"
             },
             {
                 "command": "ros.stopCore",
                 "title": "Stop",
-                "category": "ROS"
+                "category": "ROS 1"
             },
             {
                 "command": "ros.updateCppProperties",
                 "title": "Update C++ Properties",
-                "category": "ROS"
+                "category": "ROS 1"
             },
             {
                 "command": "ros.updatePythonPath",
                 "title": "Update Python Path",
-                "category": "ROS"
+                "category": "ROS 1"
             },
             {
                 "command": "ros.rosdep",
-                "title": "Install ROS Dependencies for this workspace using rosdep",
-                "category": "ROS"
+                "title": "Install ROS 1 Dependencies for this workspace using rosdep",
+                "category": "ROS 1"
             }
-        ],
-        "configuration": {
+        ],        "configuration": {
             "type": "object",
-            "title": "ROS",
+            "title": "ROS 1",
             "properties": {
                 "ros.distro": {
                     "type": "string",
-                    "description": "ROS installation distro to be sourced."
+                    "description": "ROS 1 installation distro to be sourced."
                 },
                 "ros.rosSetupScript": {
                     "type": "string",
-                    "description": "ROS workspace setup script. Overrides ros.distro."
+                    "description": "ROS 1 workspace setup script. Overrides ros.distro."
                 },
                 "ros.isolateEnvironment": {
                     "type": "bool",
@@ -125,13 +121,13 @@
                     "description": "Specify if the extension should not capture the environment VSCode is running in to pass to child processes."
                 }
             }
-        },
-        "debuggers": [
+        },        "debuggers": [
             {
                 "type": "ros",
-                "label": "ROS",
-                "program": "./out/src/debugger/main.js",
+                "label": "ROS 1",
+                "program": "./dist/debugger-main.js",
                 "runtime": "node",
+                "languages": ["cpp", "python"],
                 "configurationAttributes": {
                     "launch": {
                         "required": [
@@ -214,23 +210,22 @@
                             }
                         }
                     }
-                },
-                "configurationSnippets": [
+                },                "configurationSnippets": [
                     {
-                        "label": "ROS: Launch",
-                        "description": "Debug ROS node(s) at launch.",
+                        "label": "ROS 1: Launch File Debug",
+                        "description": "Debug ROS 1 node(s) launched from a launch file.",
                         "body": {
-                            "name": "ROS: Launch",
+                            "name": "ROS 1: Launch File Debug",
                             "type": "ros",
                             "request": "launch",
                             "target": "absolute path to launch file"
                         }
                     },
                     {
-                        "label": "ROS: Attach",
-                        "description": "Debug a ROS node by attaching to it.",
+                        "label": "ROS 1: Attach to Process",
+                        "description": "Debug a running ROS 1 node by attaching to its process.",
                         "body": {
-                            "name": "ROS: Attach",
+                            "name": "ROS 1: Attach to Process",
                             "type": "ros",
                             "request": "attach"
                         }

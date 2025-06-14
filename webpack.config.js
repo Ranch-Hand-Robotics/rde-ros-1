@@ -50,6 +50,24 @@ const extensionConfig = {
 };
 
 /** @type WebpackConfig */
+const debuggerConfig = {
+  ...baseConfig,
+  target: "node",
+  entry: "./src/debugger/main.ts",
+  externals: {
+    vscode: 'commonjs vscode', // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
+    '@vscode/debugadapter': 'commonjs @vscode/debugadapter',
+    '@vscode/debugprotocol': 'commonjs @vscode/debugprotocol'
+  },
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "debugger-main.js",
+    libraryTarget: "commonjs2",
+    devtoolModuleFilenameTemplate: '../[resource-path]'
+  },
+};
+
+/** @type WebpackConfig */
 const ros1_webview_config = {
   ...baseConfig,
   target: ["web", "es2022"],
@@ -66,4 +84,4 @@ const ros1_webview_config = {
   },
 };
 
-module.exports = [extensionConfig, ros1_webview_config];
+module.exports = [extensionConfig, debuggerConfig, ros1_webview_config];

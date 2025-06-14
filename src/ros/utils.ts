@@ -3,6 +3,7 @@
 
 import * as child_process from "child_process";
 import * as os from "os";
+import * as path from "path";
 import * as vscode from "vscode";
 
 import * as extension from "../extension";
@@ -74,14 +75,23 @@ export function xacro(filename: string): Promise<any> {
  * Gets the names of installed distros.
  */
 export function getDistros(): Promise<string[]> {
-    return pfs.readdir("/opt/ros");
+    let rosPath: string;
+    if (process.platform === "win32") {
+        rosPath = path.join("C:", "opt", "ros");
+    } else {
+        rosPath = "/opt/ros";
+    }
+    
+    return pfs.readdir(rosPath).catch((error) => {
+        return [];
+    });
 }
 
 /**
  * Creates and shows a ROS-sourced terminal.
  */
 export function createTerminal(context: vscode.ExtensionContext): vscode.Terminal {
-    const terminal = vscode.window.createTerminal({ name: 'ROS', env: extension.env })
+    const terminal = vscode.window.createTerminal({ name: 'ROS 1', env: extension.env })
     terminal.show();
 
     return terminal;

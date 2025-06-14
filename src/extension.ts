@@ -63,10 +63,9 @@ export enum Commands {
     PreviewURDF = "ros.previewUrdf",
 }
 
-export async function activate(context: vscode.ExtensionContext) {
-    let init = vscode.window.withProgress({
+export async function activate(context: vscode.ExtensionContext) {    let init = vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
-        title: "ROS Extension Initializing...",
+        title: "ROS 1 Extension Initializing...",
         cancellable: false
     }, async (progress, token) => {
         extPath = context.extensionPath;
@@ -74,12 +73,13 @@ export async function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(outputChannel);
 
         // Activate components when the ROS env is changed.
-        context.subscriptions.push(onDidChangeEnv(activateEnvironment.bind(null, context)));
-
-        // Activate components which don't require the ROS env.
+        context.subscriptions.push(onDidChangeEnv(activateEnvironment.bind(null, context)));        // Activate components which don't require the ROS env.
         context.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(
             "cpp", new cpp_formatter.CppFormatter()
         ));
+
+        // Register the debugger early so it's always available
+        debug_manager.registerRosDebugManager(context);
 
         // Source the environment, and re-source on config change.
         let config = vscode_utils.getExtensionConfiguration();
@@ -225,9 +225,7 @@ async function activateEnvironment(context: vscode.ExtensionContext) {
     selectROSApi(env.ROS_VERSION);
 
     // Do this again, after the build tool has been determined.
-    await sourceRosAndWorkspace();
-
-    rosApi.setContext(context, env);
+    await sourceRosAndWorkspace();    rosApi.setContext(context, env);
 
     subscriptions.push(rosApi.activateCoreMonitor());
     if (buildToolDetected) {
@@ -237,8 +235,6 @@ async function activateEnvironment(context: vscode.ExtensionContext) {
 
     }
     subscriptions.push(...registerRosShellTaskProvider());
-
-    debug_manager.registerRosDebugManager(context);
 
     // Register commands dependent on a workspace
     if (buildToolDetected) {
@@ -334,14 +330,13 @@ async function sourceRosAndWorkspace(): Promise<void> {
         let distro = config.get("distro", "");
 
         // Is there a distro defined either by setting or environment?
-        outputChannel.appendLine(`Current ROS_DISTRO environment variable: ${process.env.ROS_DISTRO}`);
-        if (!distro) {
+        outputChannel.appendLine(`Current ROS_DISTRO environment variable: ${process.env.ROS_DISTRO}`);        if (!distro) {
             // No? Try to find one.
             const installedDistros = await ros_utils.getDistros();
             if (!installedDistros.length) {
-                outputChannel.appendLine(`No distros found.`);
+                outputChannel.appendLine("ROS 1 has not been found on this system.");
 
-                throw new Error("ROS has not been found on this system.");
+                throw new Error("ROS 1 has not been found on this system.");
             } else if (installedDistros.length === 1) {
                 outputChannel.appendLine(`Only one distro, selecting ${installedDistros[0]}`);
 
@@ -353,7 +348,7 @@ async function sourceRosAndWorkspace(): Promise<void> {
                 // dump installedDistros to outputChannel
                 outputChannel.appendLine(`Installed distros: ${installedDistros}`);
 
-                const message = "Unable to determine ROS distribution, please configure this workspace by adding \"ros.distro\": \"<ROS Distro>\" in settings.json";
+                const message = "Unable to determine ROS 1 distribution, please configure this workspace by adding \"ros.distro\": \"<ROS 1 Distro>\" in settings.json";
                 await vscode.window.setStatusBarMessage(message, kWorkspaceConfigTimeout);
             }
         }
