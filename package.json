@@ -1,6 +1,6 @@
 {
     "name": "rde-ros-1",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "publisher": "Ranch-Hand-Robotics",
     "engines": {
         "vscode": "^1.69.0"
@@ -33,7 +33,6 @@
     "bugs": {
         "url": "https://github.com/ranchhandrobotics/vscode-ros/issues"
     },
-    "preview": true,
     "main": "./dist/extension",
     "activationEvents": [
         "onLanguage:cpp",
