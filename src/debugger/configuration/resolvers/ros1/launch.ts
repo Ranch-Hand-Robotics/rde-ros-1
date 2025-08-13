@@ -12,6 +12,8 @@ import * as tmp from "tmp";
 import * as util from "util";
 import * as vscode from "vscode";
 
+import * as vscode_utils from "../../../../vscode-utils";
+
 import * as extension from "../../../../extension";
 import * as requests from "../../../requests";
 import * as utils from "../../../utils";
@@ -31,6 +33,31 @@ interface ILaunchRequest {
     sourceFileMap?: { [key: string]: string };
     launch?: string[];    // Scripts or executables to just launch without attaching a debugger
     attachDebugger?: string[];    // If specified, Scripts or executables to debug; otherwise attaches to everything not ignored
+}
+
+export interface ILldbLaunchConfiguration {
+    type: "lldb";
+    request: "launch" | "attach";
+    name: string;
+    cwd?: string;
+    program?: string;
+    args?: string[];
+    env?:  { [key: string]: string };
+    initCommands?: string[];
+    targetCreateCommands?: string[];
+    preRunCommands?: string[];
+    processCreateCommands?: string[];
+    postRunCommands?: string[];
+    preTerminateCommands?: string[];
+    exitCommands?: string[];
+    expressions?: "simple" | "python" | "native";
+    sourceMap?: { [key: string]: string; };
+    relativePathBase?: string;
+    breakpointMode?: "path" | "file";
+    sourceLanguages?: string[]; 
+    reverseDebugging?: boolean;
+    stopAtEntry?: boolean;
+    pid?: number;
 }
 
 export class LaunchResolver implements vscode.DebugConfigurationProvider {
@@ -211,8 +238,10 @@ export class LaunchResolver implements vscode.DebugConfigurationProvider {
     }
 
     private async executeLaunchRequest(request: ILaunchRequest, stopOnEntry: boolean) {
-        let debugConfig: ICppvsdbgLaunchConfiguration | ICppdbgLaunchConfiguration | IPythonLaunchConfiguration;
+        let debugConfig: ICppvsdbgLaunchConfiguration | ICppdbgLaunchConfiguration | IPythonLaunchConfiguration | ILldbLaunchConfiguration | undefined = undefined;
 
+        const isCursor = vscode_utils.isRunningInCursor();
+                
         if (os.platform() === "win32") {
             if (request.executable.toLowerCase().endsWith("python") ||
                 request.executable.toLowerCase().endsWith("python.exe")) {
@@ -229,33 +258,48 @@ export class LaunchResolver implements vscode.DebugConfigurationProvider {
                 };
                 debugConfig = pythonLaunchConfig;
             } else if (request.executable.endsWith(".exe")) {
-                interface ICppEnvConfig {
-                    name: string;
-                    value: string;
-                }
-                const envConfigs: ICppEnvConfig[] = [];
-                for (const key in request.env) {
-                    if (request.env.hasOwnProperty(key)) {
-                        envConfigs.push({
-                            name: key,
-                            value: request.env[key],
-                        });
-                    }
-                }
-                const cppvsdbgLaunchConfig: ICppvsdbgLaunchConfiguration = {
-                    name: request.nodeName,
-                    type: "cppvsdbg",
-                    request: "launch",
-                    cwd: ".",
-                    program: request.executable,
-                    args: request.arguments,
-                    environment: envConfigs,
-                    stopAtEntry: stopOnEntry,
-                    symbolSearchPath: request.symbolSearchPath,
-                    sourceFileMap: request.sourceFileMap
+                if (isCursor) {
+                    const lldbLaunchConfig: ILldbLaunchConfiguration = {
+                        name: request.nodeName,
+                        type: "lldb",
+                        request: "launch",
+                        program: request.executable,
+                        args: request.arguments,
+                        cwd: ".",
+                        env: request.env,
+                        stopAtEntry: stopOnEntry
+                    };
 
-                };
-                debugConfig = cppvsdbgLaunchConfig;
+                    debugConfig =  lldbLaunchConfig;
+                } else {
+                    interface ICppEnvConfig {
+                        name: string;
+                        value: string;
+                    }
+                    const envConfigs: ICppEnvConfig[] = [];
+                    for (const key in request.env) {
+                        if (request.env.hasOwnProperty(key)) {
+                            envConfigs.push({
+                                name: key,
+                                value: request.env[key],
+                            });
+                        }
+                    }
+                    const cppvsdbgLaunchConfig: ICppvsdbgLaunchConfiguration = {
+                        name: request.nodeName,
+                        type: "cppvsdbg",
+                        request: "launch",
+                        cwd: ".",
+                        program: request.executable,
+                        args: request.arguments,
+                        environment: envConfigs,
+                        stopAtEntry: stopOnEntry,
+                        symbolSearchPath: request.symbolSearchPath,
+                        sourceFileMap: request.sourceFileMap
+
+                    };
+                    debugConfig = cppvsdbgLaunchConfig;
+                }
             }
 
             if (!debugConfig) {
@@ -310,7 +354,20 @@ export class LaunchResolver implements vscode.DebugConfigurationProvider {
                         justMyCode: false,
                     };
                     debugConfig = pythonLaunchConfig;
-                } else {
+                } else if (isCursor) {
+                    const lldbLaunchConfig: ILldbLaunchConfiguration = {
+                        name: request.nodeName,
+                        type: "lldb",
+                        request: "launch",
+                        program: request.executable,
+                        args: request.arguments,
+                        cwd: ".",
+                        env: request.env,
+                        stopAtEntry: stopOnEntry
+                    };
+
+                    debugConfig =  lldbLaunchConfig;
+                } else {                    
                     interface ICppEnvConfig {
                         name: string;
                         value: string;

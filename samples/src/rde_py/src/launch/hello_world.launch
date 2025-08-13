@@ -1,0 +1,6 @@
+<launch>
+  <!-- Launch the Hello World Publisher node -->
+  <node name="hello_world_publisher" pkg="hello_world_publisher" type="hello_world_publisher.py" output="screen">
+    <!-- You can add parameters here if needed -->
+  </node>
+</launch>

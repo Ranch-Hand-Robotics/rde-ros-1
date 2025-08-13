@@ -370,6 +370,7 @@
     "scripts": {
         "package:dev": "vsce package -o vscode-ros-dev.vsix",
         "build": "npm run package",
+        "build:cursor": "node scripts/build-cursor.js",
         "pretest": "npm run compile",
         "vscode:prepublish": "npm run package",
         "webpack": "webpack --mode development",
@@ -417,9 +418,5 @@
         "typescript": "^5.2.2",
         "webpack": "^5.88.2",
         "webpack-cli": "^5.1.4"
-    },
-    "extensionDependencies": [
-        "ms-python.python",
-        "ms-vscode.cpptools"
-    ]
+    }
 }

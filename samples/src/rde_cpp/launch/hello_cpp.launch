@@ -1,0 +1,6 @@
+<launch>
+  <!-- Launch the Hello C++ Publisher node -->
+  <node name="hello_cpp_publisher" pkg="rde_cpp" type="hello_cpp_publisher" output="screen">
+    <!-- You can add parameters here if needed -->
+  </node>
+</launch>
