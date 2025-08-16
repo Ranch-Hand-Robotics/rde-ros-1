@@ -1,8 +1,8 @@
 # Robot Developer Extensions for ROS 1
+This is a Visual Studio Code Extension that provides debugging support for [Robot Operating System (ROS 1)](http://ros.org) development. The Robot Operating System is a trademark of Open Robotics.
 
-The Robot Developer Extensions (RDE) is a set of extensions for [Visual Studio Code](https://code.visualstudio.com). This extension provides support for the Legacy [Robot Operating System (ROS)](http://ros.org) 1 runtime, an open-source robotics middleware producted by [Open Robotics](https://www.openrobotics.org/) and supports development on Windows and Linux. 
+> NOTE: This extension is rebranded and re-released by Ranch Hand Robotics, a company owned by the maintainer of the [ms-iot VSCode ROS Extension](https://github.com/ms-iot/vscode-ros) with permission from Microsoft. The source extension was split into 3 parts - [ROS 1](https://ranchhandrobotics.github.io/rde-ros-1/), [ROS 2](https://ranchhandrobotics.github.io/rde-ros-2/) and a [URDF/Xacro editor](https://ranchhandrobotics.github.io/rde-urdf/).
 
-> NOTE: This extension is rebranded and re-released by Ranch Hand Robotics, owned by the maintainer of the [ms-iot VSCode ROS Extension](https://github.com/ms-iot/vscode-ros) with permission from Microsoft. 
 
 ## Features
 
@@ -15,9 +15,9 @@ The Robot Developer Extensions (RDE) is a set of extensions for [Visual Studio C
 * Syntax highlighting for `.msg`, `.urdf` and other ROS files.
 * Automatically add the ROS C++ include and Python import paths.
 * Format C++ using the ROS `clang-format` style.
-* Preview URDF and Xacro files.
-* Debug a single ROS node (C++ or Python) by [attaching to the process][debug_support-attach].
-* Debug ROS nodes (C++ or Python) [launched from a `.launch` file][debug_support-launch].
+* Debug a single ROS node (C++ or Python) by [attaching to the process](https://ranchhandrobotics.com/rde-ros-1/debug-support.html#attach).
+* Debug ROS nodes (C++ or Python) [launched from a `.launch` file](https://ranchhandrobotics.com/rde-ros-1/debug-support.html#launch).
+* Support for Visual Studio Code and Cursor
 
 ## Getting Started
 
@@ -29,7 +29,7 @@ each system.
 
 ## Available Commands
 Visit the [Tutorials and Walkthroughs](https://github.com/ranch-hand-robotics/rde-ros-1/blob/master/docs/usage.md)
-\
+
 ## Tutorials and Walkthroughs
 
 Visit the [Tutorials and Walkthroughs](https://github.com/ranch-hand-robotics/rde-ros-1/blob/master/docs/tutorials.md)
@@ -48,6 +48,7 @@ For more detailed instructions and options, refer to our [debugging documentatio
 
 ## Support
 If you encounter any issues with this extension, the following resources are provided:
+
 ### Github Issues
 Bugs and feature requests are handled through [Github Issues in the Repository](https://github.com/Ranch-Hand-Robotics/rde-ros-1/issues). 
 If you find that you are hitting the same issue as someone else, please give a :+1: or comment on an existing issue.
@@ -56,10 +57,9 @@ Please provide as much details as possible, including an isolated reproduction o
 ### Discussions
 [Github Discussions](https://github.com/orgs/Ranch-Hand-Robotics/discussions) are provided for community driven general guidance, walkthroughs, or support.
 
-### Sponsored Support
-![Coming Soon](https://img.shields.io/badge/Coming%20Soon-8A2BE2)
+## Sponsor
+If you find this extension useful, please consider [sponsoring Ranch Hand Robotics](https://github.com/sponsors/Ranch-Hand-Robotics) to help support the development of this extension and other open source projects.
 
-One on one support, mentoring and consulting will be available through Github Sponsors and Patreon. 
 
 ## Contribution
 Contributions are always welcome! Please see our [contributing guide][contributing] for more details!
