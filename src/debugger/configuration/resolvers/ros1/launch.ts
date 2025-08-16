@@ -270,7 +270,7 @@ export class LaunchResolver implements vscode.DebugConfigurationProvider {
                         stopAtEntry: stopOnEntry
                     };
 
-                    debugConfig =  lldbLaunchConfig;
+                    debugConfig = lldbLaunchConfig;
                 } else {
                     interface ICppEnvConfig {
                         name: string;
