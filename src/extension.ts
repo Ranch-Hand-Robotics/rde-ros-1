@@ -355,10 +355,7 @@ async function sourceRosAndWorkspace(): Promise<void> {
 
         if (process.env.ROS_DISTRO && process.env.ROS_DISTRO !== distro) {
             outputChannel.appendLine(`ROS_DISTRO environment variable (${process.env.ROS_DISTRO}) does not match configured distro (${distro}).`);
-
-            outputChannel.appendLine(`Overriding the configured distro with the environment variable.`);
-
-            distro = process.env.ROS_DISTRO;
+            outputChannel.appendLine(`Using configured distro nevertheless. Adjust your settings.json if this is not your intention.`);
         }
 
         if (distro) {
