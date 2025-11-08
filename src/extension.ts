@@ -330,7 +330,8 @@ async function sourceRosAndWorkspace(): Promise<void> {
         let distro = config.get("distro", "");
 
         // Is there a distro defined either by setting or environment?
-        outputChannel.appendLine(`Current ROS_DISTRO environment variable: ${process.env.ROS_DISTRO}`);        if (!distro) {
+        outputChannel.appendLine(`Current ROS_DISTRO environment variable: ${process.env.ROS_DISTRO}`);
+        if (!distro) {
             // No? Try to find one.
             const installedDistros = await ros_utils.getDistros();
             if (!installedDistros.length) {
@@ -345,20 +346,25 @@ async function sourceRosAndWorkspace(): Promise<void> {
                 distro = installedDistros[0];
             } else {
                 outputChannel.appendLine(`Multiple distros found, prompting user to select one.`);
-                // dump installedDistros to outputChannel
                 outputChannel.appendLine(`Installed distros: ${installedDistros}`);
 
-                const message = "Unable to determine ROS 1 distribution, please configure this workspace by adding \"ros.distro\": \"<ROS 1 Distro>\" in settings.json";
-                await vscode.window.setStatusBarMessage(message, kWorkspaceConfigTimeout);
+                const picked = await vscode.window.showQuickPick(installedDistros, {
+                    placeHolder: "Select ROS 1 distribution for this workspace"
+                });
+                if (!picked) {
+                    outputChannel.appendLine("User cancelled ROS distro selection.");
+                    throw new Error("No ROS 1 distro selected.");
+                }
+
+                await config.update("distro", picked);
+                distro = picked;
+                outputChannel.appendLine(`Configured ROS distro: ${distro}`);
             }
         }
 
         if (process.env.ROS_DISTRO && process.env.ROS_DISTRO !== distro) {
             outputChannel.appendLine(`ROS_DISTRO environment variable (${process.env.ROS_DISTRO}) does not match configured distro (${distro}).`);
-
-            outputChannel.appendLine(`Overriding the configured distro with the environment variable.`);
-
-            distro = process.env.ROS_DISTRO;
+            outputChannel.appendLine(`Using configured distro nevertheless. Adjust your settings.json if this is not your intention.`);
         }
 
         if (distro) {
