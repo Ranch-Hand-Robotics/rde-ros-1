@@ -8,7 +8,7 @@ import * as common from "./common";
 import * as rosShell from "./ros-shell";
 
 function makeCatkin(name: string, command: string, args: string[], category?: string): vscode.Task {
-    const task = rosShell.make(name, {type: command, command, args: ['--workspace', vscode.workspace.rootPath, ...args]}, category)
+    const task = rosShell.make(name, {type: command, command, args: ['build', '--workspace', vscode.workspace.rootPath, ...args]}, category)
     task.problemMatchers = ["$catkin-gcc"];
 
     return task;

@@ -334,7 +334,7 @@
                     },
                     "args": {
                         "type": "array",
-                        "description": "Commadn line arguments to command"
+                        "description": "Command line arguments to command"
                     }
                 }
             },
@@ -343,7 +343,7 @@
                 "properties": {
                     "args": {
                         "type": "array",
-                        "description": "Commadn line arguments to catkin_make"
+                        "description": "Command line arguments to catkin_make"
                     }
                 }
             },
@@ -352,7 +352,7 @@
                 "properties": {
                     "args": {
                         "type": "array",
-                        "description": "Commadn line arguments to catkin_make_isolated"
+                        "description": "Command line arguments to catkin_make_isolated"
                     }
                 }
             },
@@ -361,7 +361,7 @@
                 "properties": {
                     "args": {
                         "type": "array",
-                        "description": "Commadn line arguments to catkin"
+                        "description": "Command line arguments to catkin"
                     }
                 }
             }
