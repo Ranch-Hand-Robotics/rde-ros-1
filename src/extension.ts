@@ -274,7 +274,7 @@ async function sourceRosAndWorkspace(): Promise<void> {
 
     // Processing a new environment can take time which introduces a race condition. 
     // Wait to atomicly switch by composing a new environment block then switching at the end.
-    let newEnv = undefined;
+    let newEnv: NodeJS.ProcessEnv = {};
 
     outputChannel.appendLine("Sourcing ROS and Workspace");
 
@@ -336,8 +336,6 @@ async function sourceRosAndWorkspace(): Promise<void> {
             const installedDistros = await ros_utils.getDistros();
             if (!installedDistros.length) {
                 outputChannel.appendLine("ROS 1 has not been found on this system.");
-
-                throw new Error("ROS 1 has not been found on this system.");
             } else if (installedDistros.length === 1) {
                 outputChannel.appendLine(`Only one distro, selecting ${installedDistros[0]}`);
 
@@ -353,7 +351,6 @@ async function sourceRosAndWorkspace(): Promise<void> {
                 });
                 if (!picked) {
                     outputChannel.appendLine("User cancelled ROS distro selection.");
-                    throw new Error("No ROS 1 distro selected.");
                 }
 
                 await config.update("distro", picked);
@@ -389,6 +386,9 @@ async function sourceRosAndWorkspace(): Promise<void> {
             }
         } else if (process.env.ROS_DISTRO) {
             newEnv = process.env;
+        } else {
+            outputChannel.appendLine(`ROS not found on this system, silently exiting`);
+            return;
         }
     }
 
