@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Debug ROS nodes with vscode-ros - Visual Studio Code Robot Developer Extensions for ROS 1</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Debug ROS nodes with vscode-ros";
+        var mkdocs_page_input_path = "spec/debug-ros-nodes.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../index.html" class="icon icon-home"> Visual Studio Code Robot Developer Extensions for ROS 1
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Usage</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Debugging</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../debug-support.html">Debug ROS Nodes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../launchdebugging.html">Launchdebugging</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Specifications</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Debug ROS nodes with vscode-ros</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#goals">Goals</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#non-goals">Non-goals</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#debugging-in-visual-studio-code">Debugging in Visual Studio Code</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#attach">Attach</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#attach-into-a-c-process">Attach into a C++ process</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#attach-into-a-python-process">Attach into a Python process</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#example-for-attach">Example for attach</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#note-on-attach-debug">Note on attach-debug</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#launch">Launch</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#todo">TODO</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#limitations">Limitations</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#example-for-launch">Example for launch</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ros2-support">ROS2 support</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#appendix">Appendix</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#why-no-launch-prefix-support-for-rospy">Why no launch-prefix support for rospy</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#why-is-a-stub-debug-adapter-needed">Why is a stub debug adapter needed</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#what-about-adding-a-debug-attribute-to-the-node-element-in-roslaunch">What about adding a debug attribute to the node element in roslaunch</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#what-about-an-updated-roslaunch">What about an updated roslaunch</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Visual Studio Code Robot Developer Extensions for ROS 1</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Specifications</li>
+      <li class="breadcrumb-item active">Debug ROS nodes with vscode-ros</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/ranch-hand-robotics/rde-ros-1/edit/master/docs/spec/debug-ros-nodes.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="debug-ros-nodes-with-vscode-ros">Debug ROS nodes with <code>vscode-ros</code></h1>
+<p>Debugging is one of the most important and needed feature of a developer's toolkit when it comes to software development.
+To debug ROS nodes launched by <code>roslaunch</code>, ROS wiki suggests using the <a href="http://wiki.ros.org/roslaunch/Tutorials/Roslaunch%20Nodes%20in%20Valgrind%20or%20GDB"><code>launch-prefix</code></a> attribute defined in a <code>.launch</code> launch file with debugger commands like this:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><code>launch-prefix</code></th>
+<th style="text-align: center;">usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><code>gdb -ex run --args</code></td>
+<td style="text-align: center;">run node in <code>gdb</code> in the same <code>xterm</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>valgrind</code></td>
+<td style="text-align: center;">run node in <code>valgrind</code></td>
+</tr>
+</tbody>
+</table>
+<p>Currently, this approach only provides <a href="#why-no-launch-prefix-support-for-rospy">limited</a> debugger support to <code>roscpp</code> nodes.</p>
+<h2 id="goals">Goals</h2>
+<ul>
+<li>enable attaching into a local C++ or Python process launched through <code>roslaunch</code> to debug that process</li>
+<li>enable debugging C++ and Python nodes specified in a <code>.launch</code> file at entry</li>
+</ul>
+<h3 id="non-goals">Non-goals</h3>
+<p>Language-specific debugging capabilities including:</p>
+<ul>
+<li>complicated debugging scenarios like debugging a remote process</li>
+</ul>
+<p>We would want to utilize existing language-specific tools for <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools">C++</a> and <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.python">Python</a>:</p>
+<p><img alt="architecture" src="../assets/spec/debug-ros-nodes/architecture.png" /></p>
+<h2 id="debugging-in-visual-studio-code">Debugging in Visual Studio Code</h2>
+<p>Typically, to start a debugging sessions, a debug configuration should be created in <code>launch.json</code> first.
+After that, the newly created configuration could be selected and executed by pressing the green arrow or the <code>F5</code> key.</p>
+<p><img alt="execute_a_debug_configuration" src="../assets/spec/debug-ros-nodes/execute-a-debug-configuration.png" /></p>
+<p>What happens afterwards gets handled by 2 processes:</p>
+<ul>
+<li>the running Visual Studio Code instance (this is the running context of all extensions)</li>
+<li>the debug adapter instance (for each language)</li>
+</ul>
+<p>A debug configuration first gets resolved by a registered debug configuration provider in VS Code's context.
+Afterwards, a debug request gets sent to the extension’s debug adapter, which actually handles the debugging process.
+However, the debug adapter is a separate process from the VS Code process, so no <code>vscode</code> APIs could be called from there.</p>
+<p>In our scenario, we need to do everything in the extension context to utilize the functionalities provided by other extensions.
+Ideally, the workflow should be as simple as possible:</p>
+<ol>
+<li>the user creates a <code>ros</code>-type debug configuration</li>
+<li>our extension resolves the configuration</li>
+<li>our extension generates debug configuration for C++ or/and Python extensions</li>
+</ol>
+<p><img alt="debug_flow" src="../assets/spec/debug-ros-nodes/debug-flow.png" /></p>
+<p>As illustrated in the above flow chart, we would also <a href="#why-is-a-stub-debug-adapter-needed">need a stub debug adapter</a>.</p>
+<h2 id="attach">Attach</h2>
+<p>Our goal for attach-debug is to provide a way to debug a ROS node while not changing anything in an existing flow.
+This means when the user executes a <code>.launch</code> file with <code>roslaunch</code> just like before, he/she could use <code>vscode-ros</code> to easily start an attach-debug session to debug a running ROS node process.
+All attach-debug configurations are propagated to language-specific extensions.</p>
+<p><img alt="attach_debug" src="../assets/spec/debug-ros-nodes/attach-debug.png" /></p>
+<h3 id="attach-into-a-c-process">Attach into a C++ process</h3>
+<p>Just like using Visual Studio or windbg, attaching into a running C++ process could be achieved with <code>vscode-cpptools</code> easily.
+Our extension automatically chooses <code>cppvsdbg</code> for MSVC debugger when it's running on Windows, and <code>cppdbg</code> for gdb-based debugger otherwise.</p>
+<h3 id="attach-into-a-python-process">Attach into a Python process</h3>
+<p>Our extension uses <a href="https://github.com/microsoft/ptvsd"><code>ptvsd</code></a> to enable debugging Python scripts.
+Generally, a Python script needs to be launched through the <code>ptvsd</code> module to be able to be debugged:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>ptvsd<span class="w"> </span>–host<span class="w"> </span>&lt;host&gt;<span class="w"> </span>--port<span class="w"> </span>&lt;port&gt;<span class="w"> </span>&lt;script&gt;
+</code></pre></div>
+<p>Once a script is launched like this, a Python attach session could be launched inside VS Code to attach to the <code>ptvsd</code> server running inside the process.</p>
+<p>However, Python processes launched by ROS tools (<code>rosrun</code> and <code>roslaunch</code>) are usually launched natively.
+To debug a Python process without a running <code>ptvsd</code> instance, a <code>ptvsd</code> instance needs to be injected into the process first with the <code>--pid &lt;pid&gt;</code> flag.
+Therefore, for normal Python processes in ROS, the workflow would be:</p>
+<ol>
+<li>get the PID of the Python process (we reuse the <code>processPicker</code> module from <code>vscode-cpptools</code>)</li>
+<li>inject <code>ptvsd</code> using API exposed by <code>vscode-python</code> (this avoids potential <code>ptvsd</code> version mismatch)</li>
+<li>start a Python-attach debug session with <code>vscode-python</code></li>
+</ol>
+<p>To avoid potential version mismatch between the <code>ptvsd</code> module used by the Python extension and the one to be injected into the Python process, we use the <a href="https://github.com/microsoft/vscode-python/blob/master/src/client/api.ts">API</a> exposed by <code>vscode-python</code> to ensure the same version across processes.</p>
+<h3 id="example-for-attach">Example for <code>attach</code></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ROS: Attach&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ros&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attach&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ROS: Attach to Python&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ros&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;attach&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;runtime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Python&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="note-on-attach-debug">Note on attach-debug</h3>
+<p>Microsoft's VS Code extensions for <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools">C++</a> and <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.python">Python</a> provide flexible mechanisms of attaching into a <a href="https://code.visualstudio.com/cpp/launch-json-reference">C++</a> or <a href="https://code.visualstudio.com/python/debugging">Python</a> process.
+This extension only aims to enable a basic and generic attach-debug flow.
+Please use language-specific extensions for any specific debugging requirements including:</p>
+<ul>
+<li>specifying <code>symbolSearchPath</code> or <code>miDebuggerPath</code> for C++ debugging</li>
+<li>attaching to and debugging a remote process</li>
+</ul>
+<h2 id="launch">Launch</h2>
+<p>Our goal for launch-debug is to mimic the experience of debugging a single program in VS Code.
+When a <code>.launch</code> file is launched in debug mode, we want to launch all the ROS nodes defined in it in debug mode at the same time.
+Similar to attach-debug, we want to utilize all the language-specific debugging functionalities provided by <code>vscode-python</code> and <code>vscode-cpptools</code>.</p>
+<p><img alt="launch_debug" src="../assets/spec/debug-ros-nodes/launch-debug.png" /></p>
+<p>From another perspective, we aim to translate launch configurations in a <code>.launch</code> file into debug configurations for VS Code that will be executed all at the same time.
+To do this, we use <a href="http://wiki.ros.org/roslaunch/Commandline%20Tools">the command line functionality of <code>roslaunch</code></a> to extract launch requests from a <code>.launch</code> file:</p>
+<ol>
+<li>get parameters defined in the <code>.launch</code> file with <code>roslaunch --dump-params &lt;launch-file&gt;</code></li>
+<li>load parameters with <a href="http://wiki.ros.org/rosparam"><code>rosparam load</code></a></li>
+<li>get the nodes defined in the <code>.launch</code> files with <code>roslaunch --nodes &lt;launch-file&gt;</code></li>
+<li>get launch requests for each node with <code>roslaunch --args &lt;node&gt; &lt;launch-file&gt;</code></li>
+</ol>
+<h3 id="todo">TODO</h3>
+<ul>
+<li>[ ] <a href="https://github.com/ranchhandrobotics/rde-ros-1/issues/122">#122</a> support language-specific configurations in debug configuration</li>
+</ul>
+<h3 id="limitations">Limitations</h3>
+<ul>
+<li>
+<p>when using the <code>--args</code> flag to get launch requests from the <code>.launch</code> file, environment configurations would be expressed as inline env-set commands:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">someenv</span><span class="o">=</span>somevalue<span class="w"> </span>node<span class="w"> </span>arg:<span class="o">=</span>value
+</code></pre></div>
+<p>which would require extra (reverse) parsing of the command line.
+This could be avoided if <code>roslaunch</code> gets <a href="#what-about-an-updated-roslaunch">updated</a>.</p>
+</li>
+<li>
+<p>with the current implementation, all nodes in a <code>.launch</code> file, instead of <a href="#what-about-adding-a-debug-attribute-to-the-node-element-in-roslaunch">only some specified ones</a>, will be launched in debug mode.
+    Potentially, when too many debug sessions are launched at the same time, it would be painful to terminate them one by one.
+    To work around this, use more than 1 <code>.launch</code> files and use one of them specifically for a limited number of nodes that need to be debugged.</p>
+</li>
+<li>
+<p>currently, when attempting to start multiple Python-launch debug sessions at once, only 1 of them could be connected.
+    For this reason, it is limited to have only 1 Python node in the launch file for now.
+    This is related to issues <a href="https://github.com/microsoft/vscode-python/issues/7269">#7269</a> and <a href="https://github.com/microsoft/vscode-python/issues/6017">#6017</a> in <code>vscode-python</code>.</p>
+</li>
+</ul>
+<h3 id="example-for-launch">Example for <code>launch</code></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ROS: Launch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ros&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;C:\\ros\\project_ws\\src\\project\\launch\\sample.launch&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ROS: Launch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ros&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;C:\\ros\\project_ws\\src\\project\\launch\\sample.launch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;stopOnEntry&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="ros2-support">ROS2 support</h3>
+<p>This extension currently does not support <a href="https://github.com/ros2/launch">the launch tool for ROS2</a>.
+Support for <code>ros2/launch</code> will be added once the launcher becomes stabilized.</p>
+<h2 id="appendix">Appendix</h2>
+<h3 id="why-no-launch-prefix-support-for-rospy">Why no <code>launch-prefix</code> support for <code>rospy</code></h3>
+<p>The ROS Wiki suggested <a href="http://wiki.ros.org/roslaunch/Tutorials/Roslaunch%20Nodes%20in%20Valgrind%20or%20GDB"><code>launch-prefix</code></a> attribute is only supported for <code>roscpp</code> nodes, and this is our take on why it is not for <code>rospy</code> too.</p>
+<p>All <code>roscpp</code> nodes are compiled C++ binaries (executables), so a <code>roscpp</code> node called <code>talker</code> could be launched directly from the command line like this:</p>
+<div class="highlight"><pre><span></span><code>./talker
+</code></pre></div>
+<p>and launching it with a debugger is straightforward:</p>
+<div class="highlight"><pre><span></span><code>gdb<span class="w"> </span>-ex<span class="w"> </span>run<span class="w"> </span>--args<span class="w"> </span>./talker
+
+valgrind<span class="w"> </span>./talker
+</code></pre></div>
+<p>At the same time, <code>rospy</code> nodes are Python scripts made executable (on Linux) by adding a <a href="https://en.wikipedia.org/wiki/Shebang_(Unix)">shebang line</a>, the actual executable is the Python interpreter:</p>
+<div class="highlight"><pre><span></span><code>./talker
+
+<span class="c1"># when talker.py has #!/usr/bin/python as the shebang line, the above line just means</span>
+/usr/bin/python<span class="w"> </span>./talker
+</code></pre></div>
+<p>Typically, to debug a Python script, one would need to use either <a href="https://docs.python.org/2/library/pdb.html"><code>pdb</code></a> or <a href="https://github.com/microsoft/ptvsd"><code>ptvsd</code></a>:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pdb<span class="w"> </span>./talker.py
+
+<span class="c1"># ptvsd only starts a debugging server inside the process</span>
+python<span class="w"> </span>-m<span class="w"> </span>ptvsd<span class="w"> </span>--host<span class="w"> </span>localhost<span class="w"> </span>--port<span class="w"> </span><span class="m">5678</span><span class="w"> </span>--wait<span class="w"> </span>./talker.py
+</code></pre></div>
+<p>To have these as the final commands, everything before <code>./talker.py</code> need to be part of the shebang line.
+However, that would be a bad choice since generally the script would/should not be launched in debug mode.
+For this reason, there is no place to insert <code>launch-prefix</code> flags for <code>rospy</code> nodes.</p>
+<p>This is a good example why it is suggested to keep the <code>.py</code> filename extension, and create separate a separate <a href="https://packaging.python.org/specifications/entry-points/">console script</a>.</p>
+<h3 id="why-is-a-stub-debug-adapter-needed">Why is a stub debug adapter needed</h3>
+<p>As illustrated in the flow charts above, a stub debug adapter that self-terminates immediately is still needed by <code>vscode-ros</code> to handle debug requests.
+These debug requests are generated from the <code>ros</code>-type debug configurations.
+When debug configurations are executed, they are resolved into debug requests and then sent to corresponding debug adapters.
+It would lead to errors generated in VS Code if no debug adapter is there to handle the debug requests.</p>
+<h3 id="what-about-adding-a-debug-attribute-to-the-node-element-in-roslaunch">What about adding a <code>debug</code> attribute to the <code>node</code> element in <code>roslaunch</code></h3>
+<p>Potentially, it could be helpful if the user could add a <code>debug=True</code> attribute (just like <code>launch-prefix</code>) in the <code>.launch</code> file to debug specific node(s).
+However, since this means changing XML specification for ROS launch files, it would require all launchers (including <code>roslaunch</code>) to understand and consume this flag.</p>
+<p>This is not preferred since <code>roslaunch</code> does not support launching nodes in debug mode.</p>
+<h3 id="what-about-an-updated-roslaunch">What about an updated <code>roslaunch</code></h3>
+<p>Ideally, <code>roslaunch</code> could be updated to support a <code>--debug</code> flag.
+When this flag is added, <code>roslaunch</code> will not start any of the ROS nodes, but instead print out the launch requests in an easy-to-parse format (e.g. JSON):</p>
+<ul>
+<li>parameters to be set for the launch request</li>
+<li>environment configurations for each node</li>
+<li>launch commands for each node</li>
+</ul>
+<!-- link to files -->
+<!-- external links -->
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../launchdebugging.html" class="btn btn-neutral float-left" title="Launchdebugging"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/ranch-hand-robotics/rde-ros-1" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../launchdebugging.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
