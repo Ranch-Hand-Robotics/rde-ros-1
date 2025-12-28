@@ -7,5 +7,6 @@ node_modules
 .vscode-test
 .vscode/c_cpp_properties.json
 .vscode/settings.json
+.vscode/*.db*
 
 vscode-ros-dev.vsix
